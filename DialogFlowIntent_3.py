@@ -2,7 +2,7 @@ import requests,base64,sys, os.path, json, time,copy
 
 headers=\
 {
-    'Authorization':'Bearer 23680a24223848129ff736e4fcb272d2',
+    'Authorization':'Bearer 4d5a0e8cc91d4d2e9e02898abcb34657',
     'Content-Type':'application/json'
 }
 IntentList={}

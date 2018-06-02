@@ -61,9 +61,11 @@ def getPrediction(userInput):
         print("Intent : ", microsoft_reply["intent"], " Score : ",microsoft_reply["score"])
     google_reply = google.getPrediction(userInput)
     print("Prediction on Google DialogFlow")
+    flag=0
     if(google_reply["result"]["metadata"]["intentName"].startswith("Default Fallback")):
         print("Intent : No User Defined Intent Found ", "Score : ", google_reply["result"]["score"])
     else:
+        flag=1
         print("Intent : ",google_reply["result"]["metadata"]["intentName"]," Score : ", google_reply["result"]["score"])
     ibm_reply= ibm.getPrediction(userInput)
     print("Prediction on Watson Assistant")
@@ -73,10 +75,34 @@ def getPrediction(userInput):
     for i in ibm_reply:
         print("Intent : ",i["intent"], " Score : ", i["confidence"])
     da=td.getPrediction(userInput)
-    print(da)
-    print("Our Preditcion Method in detial")
     print("Similarity Intent ", da[0]["Intent"], " ,Score :", da[0]["Score"])
+
     print("Negation Intent ", da[1]["Intent"], " ,Score :", da[1]["Score"])
+    print("-"*25)
+    print("Score after adding the Similarity Model : ")
+    if(flag==1 and not str(da[0]["Intent"]).startswith("Default")):
+        score = (float(da[0]["Score"]) * 0.5) + (1 * float(google_reply["result"]["score"]))
+        score = score / 1.50
+        print("Score = ",score )
+    if (flag == 0 and not str(da[0]["Intent"]).startswith("Default")):
+        score = float(da[0]["Score"]) * 0.5
+        score = score / 1.50
+        print("Score = ", score)
+    if (flag == 0 and  str(da[0]["Intent"]).startswith("Default")):
+        print("Score = 0")
+    if (flag == 1 and  str(da[0]["Intent"]).startswith("Default")):
+        score =  1 * float(google_reply["result"]["score"])
+        score = score / 1.50
+        print("Score = ", score)
+    print("Score after checking the Negation Model : ")
+    if (str(da[1]["Intent"]).startswith("Default")):
+        print("New Score = ", score)
+    if (not str(da[1]["Intent"]).startswith("Default")):
+        if(score - float(da[1]["Score"]) <=0):
+            print("New Score = 0")
+        else:
+            print("New Score = ", score)
+
 
 if __name__ == "__main__":
 
@@ -87,7 +113,7 @@ if __name__ == "__main__":
 
     #Reset Module
     print("Reseting All virtual Voice agents")
-    #resetApplication();
+    resetApplication();
     print ("Reset Done")
     print ("_"*100)
 

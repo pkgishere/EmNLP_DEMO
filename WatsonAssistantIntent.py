@@ -12,7 +12,6 @@ assistant = watson_developer_cloud.AssistantV1\
 #workSpaceID
 w_id = 'dc846ce4-56c9-408f-a37c-9aef0a7daf91'
 
-
 def createIntent(name):
     response = assistant.create_intent\
             (
